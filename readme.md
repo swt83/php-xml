@@ -11,8 +11,8 @@ $array = XML::from_file($path)->array;
 // get from string
 $array = XML::from_string($xml)->array;
 
-// get a value from array (dot-walking)
-$xml = XML::from_file($path)->get('foo.bar.value');
+// get a value from xml array
+$value = XML::from_file($path)->get('foo.bar.value'); // dot-walking the array
 ```
 
 ## Future Plans ##
