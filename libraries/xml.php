@@ -38,8 +38,13 @@ class XML
 	
 	public function __construct($string)
 	{
-		// a function from a long, long time ago...
+		// The following is a function I've had for a long time,
+		// and I have no idea where I got it.  It takes an XML string,
+		// parses it, and converts it to an array.  We'll store that
+		// array in the object and use it as we need.
+		
 		/////////////////////////////////////////////////
+		
 		if (!function_exists('xml_parser_create')) return false;
 		$parser = xml_parser_create();
 		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
@@ -111,7 +116,9 @@ class XML
 				$current = &$parent[$level-1];
 			}
 		}
+		
 		/////////////////////////////////////////////////
+		
 		$this->array = $dataml_array;
 	}
 	
@@ -125,7 +132,10 @@ class XML
 			{
 				$value = $value[$key];
 			}
-			else return $default;
+			else
+			{
+				return $default;	
+			}
 		}
 		return $value;
 	}
