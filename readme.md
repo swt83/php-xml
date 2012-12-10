@@ -16,6 +16,9 @@ $object = XML::from_string($xml);
 
 // get a value from xml array
 $value = XML::from_file($path)->get('foo.bar.value'); // dot-walking the array
+
+// get entire array
+$array = XML::from_file($path)->to_array();
 ```
 
 ## Future Plans ##
