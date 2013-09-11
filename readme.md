@@ -21,7 +21,7 @@ $value = XML::from_file($path)->get('foo.bar.value'); // dot-walking the array
 $array = XML::from_file($path)->to_array();
 
 // save to file
-$success = XML::from_array('root_node_name', $array)->to_file($path);
+$success = XML::from_array($array)->to_file('root_node_name', $path);
 ```
 
 The code that converts arrays to XML files is written by [Lalit Patel](http://www.lalit.org/lab/convert-php-array-to-xml-with-attributes/).
@@ -67,5 +67,5 @@ $books = array(
 </books>
 */
 
-XML::from_array('root', $books)->to_file($path);
+XML::from_array($books)->to_file('root', $path);
 ```
