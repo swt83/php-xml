@@ -14,9 +14,23 @@ class XML
     public $array;
 
     /**
+     * Build object from string.
+     *
+     * @param   string  $string
+     * @return  object
+     */
+    public static function from_string($string)
+    {
+        $class = __CLASS__;
+        $object = new $class;
+        $object->convert($string);
+        return $object;
+    }
+
+    /**
      * Build object from path.
      *
-     * @param   string  $path   Location of physical XML file
+     * @param   string  $path
      * @return  object
      */
     public static function from_file($path)
@@ -25,21 +39,18 @@ class XML
         $string = file_get_contents($path);
 
         // catch error...
-        if ($string)
-        {
+        if ($string) {
             // build object
             return static::from_string($string);
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-    
+
     /**
      * Build object from URL (string).
      *
-     * @param   string  Input URL from which to grab XML
+     * @param   string  $url
      * @return  object
      */
     public static function from_url($url)
@@ -51,54 +62,51 @@ class XML
         $result = curl_exec($ch);
         $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        if (curl_errno($ch))
-        {
+        if (curl_errno($ch)) {
             #$errors = curl_error($ch);
             curl_close($ch);
             return false;
-        }
-        else
-        {
+        } else {
             curl_close($ch);
-        
-            if ($code === 404)
-            {
+            if ($code == 404) {
                 return false;
-            }
-            else
-            {
+            } else {
                 return static::from_string($result);
             }
         }
     }
-    
+
     /**
-     * Build object from string.
+     * Build object from array.
      *
-     * @param   $string Input XML as string
+     * @param   array   $array
      * @return  object
      */
-    public static function from_string($string)
+    public static function from_array($array)
     {
+        if (!is_array($array)) trigger_error('Array must be array.');
+
         $class = __CLASS__;
-        return new $class($string);
+        $object = new $class;
+        $object->array = $array;
+        return $object;
     }
-    
+
     /**
-     * Constructor class.
+     * Convert string to array.
      *
-     * @param   $string Input of XML as string
-     * @return  object
+     * @param   string  $string
+     * @return  void
      */
-    public function __construct($string)
+    protected function convert($string)
     {
         // The following is a function I've had for a long time,
         // and I have no idea where I got it.  It takes an XML string,
         // parses it, and converts it to an array.  We'll store that
         // array in the object and use it as we need.
-        
+
         /////////////////////////////////////////////////
-        
+
         if (!function_exists('xml_parser_create')) return false;
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
@@ -111,104 +119,100 @@ class XML
         $opened_tags = array();
         $arr = array();
         $current = &$dataml_array;
-        foreach($dataml_values as $data)
-        {
+        foreach($dataml_values as $data) {
             unset($attributes,$value);
             extract($data);
             $result = '';
             $result = array();
             if (isset($value)) $result['value'] = $value;
-            if (isset($attributes))
-            {
-                foreach($attributes as $attr => $val)
-                {
+            if (isset($attributes)) {
+                foreach($attributes as $attr => $val) {
                     $result['attr'][$attr] = $val;
                 }
             }
-            if ($type == 'open')
-            {
+            if ($type == 'open') {
                 $parent[$level-1] = &$current;
-                if (!is_array($current) or (!in_array($tag, array_keys($current))))
-                {
+                if (!is_array($current) or (!in_array($tag, array_keys($current)))) {
                     $current[$tag] = $result;
                     $current = &$current[$tag];
-                }
-                else 
-                {
-                    if (isset($current[$tag][0]))
-                    {
+                } else {
+                    if (isset($current[$tag][0])) {
                         array_push($current[$tag], $result);
-                    }
-                    else
-                    {
+                    } else {
                         $current[$tag] = array($current[$tag],$result);
                     }
                     $last = count($current[$tag]) - 1;
                     $current = &$current[$tag][$last];
                 }
-            }
-            elseif ($type == 'complete')
-            {
-                if (!isset($current[$tag]))
-                {
+            } elseif ($type == 'complete') {
+                if (!isset($current[$tag])) {
                     $current[$tag] = $result;
-                }
-                else
-                {
-                    if (is_array($current[$tag]) or (isset($current[$tag][0]) and is_array($current[$tag][0])))
-                    {
+                } else {
+                    if (is_array($current[$tag]) or (isset($current[$tag][0]) and is_array($current[$tag][0]))) {
                         array_push($current[$tag],$result);
-                    }
-                    else
-                    {
+                    } else {
                         $current[$tag] = array($current[$tag],$result);
                     }
                 }
-            }
-            elseif ($type == 'close')
-            {
+            } elseif ($type == 'close') {
                 $current = &$parent[$level-1];
             }
         }
-        
+
         /////////////////////////////////////////////////
-        
+
         // save object array
         $this->array = $dataml_array;
     }
-    
+
     /**
      * Get specific value from object array.
      *
-     * @param   string  $dots   Dot separated array coordinates
-     * @param   string  $default    Default value if coordinates not found
+     * @param   string  $dots
+     * @param   string  $default
      * @return  mixed
      */
     public function get($dots, $default = null)
     {
         $keys = explode('.', $dots);
         $value = $this->array;
-        foreach ($keys as $key)
-        {
-            if (isset($value[$key]))
-            {
+        foreach ($keys as $key) {
+            if (isset($value[$key])) {
                 $value = $value[$key];
-            }
-            else
-            {
-                return $default;    
+            } else {
+                return $default;
             }
         }
         return $value;
     }
 
     /**
-     * Get object array as array.
+     * Return object array.
      *
      * @return  array
      */
     public function to_array()
     {
         return $this->array;
+    }
+
+    /**
+     * Save object array as file.
+     *
+     * @param   string  $root_node_name
+     * @param   string  $path
+     * @return  boolean
+     */
+    public function to_file($root_node_name, $path)
+    {
+        // include
+        require_once(__DIR__.'/../vendor/array2xml.php');
+
+        // convert
+        $xml = \Array2XML::createXML($root_node_name, $this->array);
+        $string = $xml->saveXML();
+
+        // save
+        return \File::put($path, $string);
     }
 }

@@ -1,10 +1,10 @@
-# XML for LaravelPHP #
+# XML
 
 This probably isn't the greatest XML library in the world, but it gets the job done for me.  The class converts the XML into an array for easy use.
 
-## Usage ##
+## Usage
 
-```
+```php
 // get from url
 $object = XML::from_url($url);
 
@@ -19,8 +19,53 @@ $value = XML::from_file($path)->get('foo.bar.value'); // dot-walking the array
 
 // get entire array
 $array = XML::from_file($path)->to_array();
+
+// save to file
+$success = XML::from_array('root_node_name', $array)->to_file($path);
 ```
 
-## Future Plans ##
+The code that converts arrays to XML files is written by [Lalit Patel](http://www.lalit.org/lab/convert-php-array-to-xml-with-attributes/).
 
-* I need to have a ``to_file()`` method for making physical XML files from arrays.
+```php
+$books = 1984;  // or
+$books = array(
+    '@value' = 1984
+);
+// creates <books>1984</books>
+
+$books = array(
+    '@attributes' => array(
+        'type' => 'fiction'
+    ),
+    '@value' = 1984
+);
+// creates <books type="fiction">1984</books>
+
+$books = array(
+    '@attributes' => array(
+        'type' => 'fiction'
+    ),
+    'book' => 1984
+);
+/* creates
+<books type="fiction">
+  <book>1984</book>
+</books>
+*/
+
+$books = array(
+    '@attributes' => array(
+        'type' => 'fiction'
+    ),
+    'book'=> array('1984','Foundation','Stranger in a Strange Land')
+);
+/* creates
+<books type="fiction">
+  <book>1984</book>
+  <book>Foundation</book>
+  <book>Stranger in a Strange Land</book>
+</books>
+*/
+
+XML::from_array('root', $books)->to_file($path);
+```
