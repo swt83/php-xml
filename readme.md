@@ -1,30 +1,32 @@
 # XML
 
-This probably isn't the greatest XML library in the world, but it gets the job done for me.  The class converts the XML into an array for easy use.
+A PHP library for working w/ XML files.
 
 ## Usage
 
+When loading XML files:
+
 ```php
 // get from url
-$object = XML::from_url($url);
+$object = Travis\XML::from_url($url);
 
 // get from file
-$object = XML::from_file($path);
+$object = Travis\XML::from_file($path);
 
 // get from string
-$object = XML::from_string($xml);
+$object = Travis\XML::from_string($xml);
 
 // get a value from xml array
-$value = XML::from_file($path)->get('foo.bar.value'); // dot-walking the array
+$value = Travis\XML::from_file($path)->get('foo.bar.value'); // dot-walking the array
 
 // get entire array
-$array = XML::from_file($path)->to_array();
+$array = Travis\XML::from_file($path)->to_array();
 
 // save to file
-$success = XML::from_array($array)->to_file('root_node_name', $path);
+$success = Travis\XML::from_array($array)->to_file('root_node_name', $path);
 ```
 
-The code that converts arrays to XML files is written by [Lalit Patel](http://www.lalit.org/lab/convert-php-array-to-xml-with-attributes/).
+When building new XML files:
 
 ```php
 $books = 1984;  // or
@@ -67,5 +69,7 @@ $books = array(
 </books>
 */
 
-XML::from_array($books)->to_file('root', $path);
+Travis\XML::from_array($books)->to_file('root', $path);
 ```
+
+The code that converts arrays to XML files is written by [Lalit Patel](http://www.lalit.org/lab/convert-php-array-to-xml-with-attributes/).  This package is just a handy wrapper.

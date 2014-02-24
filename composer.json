@@ -1,0 +1,32 @@
+{
+    "name": "travis/xml",
+    "description": "A PHP library for working w/ XML files.",
+    "homepage": "https://github.com/swt83/php-xml",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Scott Travis",
+            "email": "scott.w.travis@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:swt83/php-ex.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.1.*",
+        "travis/ex": "*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/libraries"
+        ],
+        "psr-0": {
+            "Travis\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
