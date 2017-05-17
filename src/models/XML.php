@@ -220,7 +220,7 @@ class XML
      * @param   string  $root_node_name
      * @return  boolean
      */
-    public function toFile($root_node_name = 'root')
+    public function toString($root_node_name = 'root')
     {
         // build
         $xml = \Array2XML::createXML($root_node_name, $this->array);
