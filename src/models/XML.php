@@ -2,8 +2,8 @@
 
 namespace Travis;
 
-class XML {
-
+class XML
+{
     /**
      * Core array of data.
      *
@@ -17,7 +17,7 @@ class XML {
      * @param   string  $string
      * @return  object
      */
-    public static function from_string($string)
+    public static function fromString($string)
     {
         $class = __CLASS__;
         $object = new $class;
@@ -31,7 +31,7 @@ class XML {
      * @param   string  $path
      * @return  object
      */
-    public static function from_file($path)
+    public static function fromFile($path)
     {
         // open file
         $string = file_get_contents($path);
@@ -54,7 +54,7 @@ class XML {
      * @param   string  $url
      * @return  object
      */
-    public static function from_url($url)
+    public static function fromURL($url)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -89,7 +89,7 @@ class XML {
      * @param   array   $array
      * @return  object
      */
-    public static function from_array($array)
+    public static function fromArray($array)
     {
         if (!is_array($array)) trigger_error('Must be array.');
 
@@ -209,28 +209,36 @@ class XML {
      *
      * @return  array
      */
-    public function to_array()
+    public function toArray()
     {
         return $this->array;
     }
 
     /**
-     * Save object array as file.
+     * Return XML as string.
      *
      * @param   string  $root_node_name
-     * @param   string  $path
      * @return  boolean
      */
-    public function to_file($root_node_name, $path)
+    public function toFile($root_node_name = 'root')
     {
         // build
         $xml = \Array2XML::createXML($root_node_name, $this->array);
 
         // convert
-        $string = $xml->saveXML();
-
-        // save
-        return file_put_contents($path, $string);
+        return $xml->saveXML();
     }
 
+    /**
+     * Save object array as file.
+     *
+     * @param   string  $path
+     * @param   string  $root_node_name
+     * @return  boolean
+     */
+    public function toFile($path, $root_node_name = 'root')
+    {
+        // save
+        return file_put_contents($path, $this->toString($root_node_name));
+    }
 }

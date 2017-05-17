@@ -23,8 +23,8 @@
         "classmap": [
             "src/libraries"
         ],
-        "psr-0": {
-            "Travis\\": "src/"
+        "psr-4": {
+            "Travis\\": "src/models/"
         }
     },
     "minimum-stability": "dev"
