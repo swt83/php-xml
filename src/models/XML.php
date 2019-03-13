@@ -36,16 +36,8 @@ class XML
         // open file
         $string = file_get_contents($path);
 
-        // catch error...
-        if ($string)
-        {
-            // build object
-            return static::fromString($string);
-        }
-        else
-        {
-            return false;
-        }
+        // return
+        return static::fromString($string);
     }
 
     /**
@@ -56,31 +48,7 @@ class XML
      */
     public static function fromURL($url)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        if (curl_errno($ch))
-        {
-            #$errors = curl_error($ch);
-            curl_close($ch);
-            return false;
-        }
-        else
-        {
-            curl_close($ch);
-            if ($code == 404)
-            {
-                return false;
-            }
-            else
-            {
-                return static::fromString($result);
-            }
-        }
+        return static::fromFile($url);
     }
 
     /**
