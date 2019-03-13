@@ -40,7 +40,7 @@ class XML
         if ($string)
         {
             // build object
-            return static::from_string($string);
+            return static::fromString($string);
         }
         else
         {
@@ -78,7 +78,7 @@ class XML
             }
             else
             {
-                return static::from_string($result);
+                return static::fromString($result);
             }
         }
     }
